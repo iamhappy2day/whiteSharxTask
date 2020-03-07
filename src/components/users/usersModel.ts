@@ -29,8 +29,8 @@ const UserSchema = new Schema({
     },
     method: {
         type: String,
-        enum: ["google", "facebook", "email"],
-        required: true
+        // enum: ["google", "facebook", "email"],
+        // required: true
     },
     google: {
         profile_id: {
