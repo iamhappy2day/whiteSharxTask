@@ -27,10 +27,10 @@ const UserSchema = new Schema({
         max: 255,
         min: 6
     },
-    method: {
+    authMethod: {
         type: String,
-        // enum: ["google", "facebook", "email"],
-        // required: true
+        enum: ["facebook", "email"],
+        required: true
     },
     google: {
         profile_id: {

@@ -1,6 +1,7 @@
 import * as Joi from '@hapi/joi';
+import {iContact} from "./interfaces/iContact";
 
-export const addAndUpdateContactValidation: any = (data: any) => {
+export const addAndUpdateContactValidation: any = (contact: iContact) => {
     const schema = Joi.object({
         _id: Joi.string(),
         name: Joi.string().min(2),
@@ -9,9 +10,7 @@ export const addAndUpdateContactValidation: any = (data: any) => {
         phone: Joi.string()
             .min(6)
             .max(20),
-        links: Joi.string(),
         email: Joi.string().email(),
-        contactImg: Joi.string()
     });
-    return schema.validate(data);
+    return schema.validate(contact);
 };
