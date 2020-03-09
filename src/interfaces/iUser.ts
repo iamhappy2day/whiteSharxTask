@@ -7,4 +7,5 @@ export interface iUser extends Document {
     phone: string;
     links: string;
     email: string;
+    password: string;
 }

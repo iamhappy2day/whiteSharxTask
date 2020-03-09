@@ -25,21 +25,13 @@ const UserSchema = new Schema({
     email: {
         type: String,
         max: 255,
-        min: 6
+        min: 6,
+        unique: true
     },
     authMethod: {
         type: String,
-        enum: ["facebook", "email"],
-        required: true
-    },
-    google: {
-        profile_id: {
-            type: String
-        },
-        email: {
-            type: String,
-            lowercase: true
-        }
+        enum: ["facebook", "emailAndPassword"],
+
     },
     facebook: {
         profile_id: {
@@ -49,7 +41,13 @@ const UserSchema = new Schema({
             type: String,
             lowercase: true
         }
+    },
+    password: {
+        type: String,
+        max: 30,
+        min: 3
     }
+
 });
 
 export const User = mongoose.model<iUser>('User', UserSchema);

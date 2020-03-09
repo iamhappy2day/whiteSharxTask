@@ -2,9 +2,11 @@ import passport from 'passport';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import { config } from '../../config';
 import { User } from '../users/usersModel';
+import {HookDoneFunction} from "mongoose";
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
+//JWT strategy
 passport.use(
   new JwtStrategy(
     {
@@ -13,7 +15,7 @@ passport.use(
     },
     async (payload: any, done: any) => {
       try {
-        const user = await User.findById(payload.userId);
+        const user = await User.findById(payload._id);
         if (!user) {
           return done(null, false);
         }
@@ -52,7 +54,7 @@ passport.use(
         //if not create a new one
         console.log('no such user! we are creating a new one');
         const newUser = new User({
-          method: 'facebook',
+          authMethod: 'facebook',
           facebook: {
             profile_id: profile.id,
             email: profile.emails[0].value
@@ -60,9 +62,13 @@ passport.use(
           name: profile.name.givenName + ' ' + profile.name.familyName
         });
         await newUser.save();
+        return done(null, {
+        existingUser: newUser
+        });
       } catch (error) {
         console.log(error.message);
       }
     }
   )
 );
+
