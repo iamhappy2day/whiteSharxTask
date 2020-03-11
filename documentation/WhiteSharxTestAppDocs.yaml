@@ -1,0 +1,351 @@
+swagger: '2.0'
+info:
+  description: This is API documentation for White Sharx test app by Sergei Revenko
+  version: 1.0.0
+  title: Test app for White Sharx
+  termsOfService: 'http://swagger.io/terms/'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'localhost:4000'
+basePath: /
+tags:
+  - name: users
+    description: Operations with users
+  - name: contacts
+    description: Operations with user's contacts
+  - name: auth
+    description: 'Operations with user authentication ( facebook, email and password)'
+schemes:
+  - http
+paths:
+  '/users':
+    get:
+      tags:
+        - users
+      summary: Get a list of all users in DB (not private, using for tests)
+      description: This endpoint uses get request to show all users
+      responses:
+        '200':
+          description: A list of users
+  '/users/{id}':
+    get:
+      tags:
+        - users
+      summary: Get a user by his id in DateBase (private, need a token)
+      description: This endpoint uses get request to display user details
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: This is a unique identifier of user from Mongo db
+          required: true
+      responses:
+        '200':
+          description: Succesful operation
+    put:
+      tags:
+        - users
+      summary: Update user (private, need a token)
+      description: This endpoint uses put request to update user profile.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: This is user id ( unique identifier of user ). 
+          required: true
+        - in: body
+          name: updates
+          description: name, company, position, phone, email, password
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+         
+      responses:
+        '200':
+          description: Succesful operation
+    delete:
+      tags:
+        - users
+      summary: Delete user (private, need a token)
+      description: This endpoint uses delete request to delete user (private, need a token). 
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          description: This is a unique identifier of user
+          required: true
+      responses:
+        '200':
+          description: Succesful operation
+  '/contacts/{ownerId}':
+    get:
+      tags:
+        - contacts
+      summary: Get array of contacts by user's id (ownerId) in DateBase (private, need a token)
+      description: This endpoint uses get request to get user's contacts from database
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: ownerId
+          type: string
+          description: This is a unique identifier of user from Mongo db whose contacts you want to receive
+          required: true
+      responses:
+        '200':
+          description: Succesfull operation
+    post:
+      tags:
+        - contacts
+      summary: 
+        Create contact. Add some new profile to contact list (private, need a token)
+      description: 
+        --
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: ownerId
+          type: string
+          description: This is a unique identifier of user who is adding contact. Owner of this contact
+          required: true
+        - in: body
+          name: contact object
+          description: contact which you want to add
+          required: true
+          schema:
+            $ref: '#/definitions/Contact'
+      responses:
+        '201':
+          description: Succesful operation
+          
+  'contacts/target/{contactId}':
+    get:
+      tags:
+        - contacts
+      summary: Get the target contact from user's contacts (private, need a token)
+      description: This endpoint uses get request to get target contact
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: contactId
+          type: string
+          description: This is a unique identifier of contact from user'scontacts list which you want to get
+          required: true
+      responses:
+        '200':
+          description: Succefull operation
+    put:
+      tags:
+        - contacts
+      summary: Update target contact from user's contacts
+      description: This endpoint uses put request to update target contact
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: contactId
+          type: string
+          description: This is a unique identifier of contact from user's contacts list which you want to update
+          required: true
+        - in: body
+          name: updates
+          type: object
+          description: This is a unique identifier of contact from user's contacts list which you want to update
+          required: true
+          schema:
+            $ref: '#/definitions/Contact'
+      responses:
+        '201':
+          description: Successfull operation
+    delete:
+      tags:
+        - contacts
+      summary: Delete the target contact from user's contacts
+      description: This endpoint uses get request to get target contact
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: contactId
+          type: string
+          description: This is a unique identifier of contact from user'scontacts list which you want to delete
+          required: true
+      responses:
+        '200':
+          description: Succefull operation
+    
+  'contacts/importCsv/{ownerId}':
+    post:
+      tags:
+        - contacts
+      summary: import .csv format files
+      description: This endpoint uses post request for importing .csv file.
+        You need to send form-data with key 'file' and attach your .scv file to it's value
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: ownerId
+          type: string
+          description: This is a unique identifier of users profile
+          required: true
+      responses:
+        '200':
+          description: Succefull operation
+    
+  'contacts/exportToCsv/{ownerId}':
+    get:
+      tags:
+        - contacts
+      summary: export Json contacts to .csv format
+      description: This endpoint uses get request for export JSON to .csv 
+      
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: ownerId
+          type: string
+          description: This is a unique identifier of users profile
+          required: true
+      responses:
+        '200':
+          description: Succefull operation      
+          
+  '/auth/facebook/':
+    post:
+      tags:
+        - auth
+      summary: >-
+        Recieves access token, refresh token and facebook profile info 
+      description: >-
+        So this endpoint exchanges user profile to access token or creates new user  if there is no user profile with such facebook_id in DataBase.
+        To try this endpoint use: "https://developers.facebook.com/tools/explorer/v2/"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: access_token
+          description: access token from facebook
+          required: true
+          schema:
+            $ref: '#/definitions/facebook_access_token'
+      responses:
+        '200':
+          description: responce includes targetUser(user object) and JWT token
+  '/auth/login/':
+    post:
+      tags:
+        - auth
+      summary: >-
+        Recieves email and password 
+      description: >-
+        login endpoint
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: access_token
+          description: access token from facebook
+          required: true
+          schema:
+            $ref: '#/definitions/loginRegister'
+      responses:
+        '200':
+          description: responce includes targetUser(user object) and JWT token
+          
+  '/auth/register/':
+    post:
+      tags:
+        - auth
+      summary: >-
+        Recieves email and password 
+      description: >-
+        register endpoint
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: email and password
+          description: email and password
+          required: true
+          schema:
+            $ref: '#/definitions/loginRegister'
+      responses:
+        '200':
+          description: responce includes new user profile info
+definitions:
+  User:
+    type: object
+    properties:
+      _id: 
+        type: string
+      name:
+        type: string
+      company:
+        type: string
+      position:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      authMethod:
+        type: string
+      facebook:
+        type: object
+        properties:
+          profile_id:
+            type: string
+          email:
+            type: string
+        
+      
+  facebook_access_token:
+    type: object
+    properties:
+      access_token:
+        type: string
+  
+  loginRegister:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+        
+  Contact:
+    type: object 
+    properties:
+      _id: 
+        type: string
+      name:
+        type: string
+      company:
+        type: string
+      position:
+        type: string
+      phone:
+        type: string
+      email:
+        type: string
+      ownerId:
+        type: string
+
+  
+
+        
+
+    
