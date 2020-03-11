@@ -1,21 +1,23 @@
 import express from 'express';
 import { ContactsController } from './contactsController';
-import passport from 'passport';
 import { catchErrors } from '../../errors/errorHandler';
-import { checkAuthorization } from '../auth/authController';
 
-const contactsController = new ContactsController();
+import { checkAuthentication } from '../../middlewares/checkAuthentication';
+import { checkAuthorization } from '../../middlewares/checkAuthorization';
 export const contactsRouter = express.Router();
+const contactsController = new ContactsController();
+import multer from 'multer';
+const upload = multer({ dest: 'csv/' });
 
 contactsRouter
   .route('/:ownerId')
   .get(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
     checkAuthorization,
     catchErrors(contactsController.getContactsByOwnerId)
   )
   .post(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
     checkAuthorization,
     catchErrors(contactsController.createContact)
   );
@@ -23,14 +25,31 @@ contactsRouter
 contactsRouter
   .route('/target/:contactId')
   .get(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
+    checkAuthorization,
     catchErrors(contactsController.getContactById)
   )
   .put(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
+    checkAuthorization,
     catchErrors(contactsController.updateContactById)
   )
   .delete(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
+    checkAuthorization,
     catchErrors(contactsController.deleteContactById)
   );
+
+//csv routes
+contactsRouter
+  .route('/importCsv/:ownerId')
+  .post(
+    upload.single('file'),
+    catchErrors(contactsController.importCsv)
+  );
+
+contactsRouter
+    .route('/exportToCsv/:ownerId')
+    .get(
+        catchErrors(contactsController.exportToCsv)
+    );

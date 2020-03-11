@@ -1,26 +1,27 @@
 import express from 'express';
 import { UserController } from './usersController';
-import { checkAuthorization } from '../auth/authController';
-import passport from 'passport';
+import {checkAuthentication} from "../../middlewares/checkAuthentication";
+import {checkAuthorization} from "../../middlewares/checkAuthorization";
 export const userRouter = express.Router();
 const userController = new UserController();
+
 
 userRouter.route('/').get(userController.getUsers);
 
 userRouter
   .route('/:id')
   .get(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
     checkAuthorization,
     userController.getUserById
   )
   .put(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
     checkAuthorization,
     userController.updateUser
   )
   .delete(
-    passport.authenticate('jwt', { session: false }),
+    checkAuthentication,
     checkAuthorization,
     userController.deleteUser
   );

@@ -14,10 +14,10 @@ export class UserService {
 
   async updateUser(updatedUser: iUser, userId: string) {
     return User.findOneAndUpdate(
-        { _id: userId },
-        updatedUser,
-        { new: true }
-        );
+      { _id: userId },
+      updatedUser,
+      { new: true }
+    );
   }
 
   async deleteUser(userId: string) {

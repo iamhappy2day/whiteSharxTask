@@ -2,7 +2,8 @@ import passport from 'passport';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import { config } from '../../config';
 import { User } from '../users/usersModel';
-import {HookDoneFunction} from "mongoose";
+import { HookDoneFunction } from 'mongoose';
+import { iUser } from '../../interfaces/iUser';
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
@@ -14,19 +15,27 @@ passport.use(
       secretOrKey: config.JWT_SECRET
     },
     async (payload: any, done: any) => {
+      let user: iUser | null;
       try {
-        const user = await User.findById(payload._id);
-        if (!user) {
-          return done(null, false);
+        if (payload._id) {
+          user = await User.findById(payload._id);
+          if (!user) {
+            return done(null, false);
+          }
+          done(null, user);
+        } else if (payload.userId) {
+          user = await User.findById(payload.userId);
+          if (!user) {
+            return done(null, false);
+          }
+          done(null, user);
         }
-        done(null, user);
       } catch (error) {
         done(error, false);
       }
     }
   )
 );
-
 
 //facebook strategy
 passport.use(
@@ -37,7 +46,12 @@ passport.use(
       clientID: config.FACEBOOK_CLIENT_ID,
       clientSecret: config.FACEBOOK_CLIENT_SECRET
     },
-    async (accessToken: string, refreshToken: string, profile: any, done: any) => {
+    async (
+      accessToken: string,
+      refreshToken: string,
+      profile: any,
+      done: any
+    ) => {
       try {
         //check if this current user exists in DB
         const existingUser = await User.findOne({
@@ -63,7 +77,7 @@ passport.use(
         });
         await newUser.save();
         return done(null, {
-        existingUser: newUser
+          existingUser: newUser
         });
       } catch (error) {
         console.log(error.message);
@@ -71,4 +85,3 @@ passport.use(
     }
   )
 );
-
