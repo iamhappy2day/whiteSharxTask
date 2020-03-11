@@ -1,10 +1,9 @@
 import express from 'express';
 import { UserController } from './usersController';
-import {checkAuthentication} from "../../middlewares/checkAuthentication";
-import {checkAuthorization} from "../../middlewares/checkAuthorization";
+import { checkAuthentication } from '../../middlewares/checkAuthentication';
+import { checkAuthorization } from '../../middlewares/checkAuthorization';
 export const userRouter = express.Router();
 const userController = new UserController();
-
 
 userRouter.route('/').get(userController.getUsers);
 

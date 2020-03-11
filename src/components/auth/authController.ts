@@ -100,7 +100,6 @@ export class AuthController {
   }
 }
 
-
 const signToken = (user: iUser) => {
   return jwt.sign(
     {

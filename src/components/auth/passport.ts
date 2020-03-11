@@ -2,7 +2,6 @@ import passport from 'passport';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import { config } from '../../config';
 import { User } from '../users/usersModel';
-import { HookDoneFunction } from 'mongoose';
 import { iUser } from '../../interfaces/iUser';
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
@@ -11,7 +10,9 @@ const { ExtractJwt } = require('passport-jwt');
 passport.use(
   new JwtStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+      jwtFromRequest: ExtractJwt.fromHeader(
+        'authorization'
+      ),
       secretOrKey: config.JWT_SECRET
     },
     async (payload: any, done: any) => {
@@ -66,14 +67,19 @@ passport.use(
         }
 
         //if not create a new one
-        console.log('no such user! we are creating a new one');
+        console.log(
+          'no such user! we are creating a new one'
+        );
         const newUser = new User({
           authMethod: 'facebook',
           facebook: {
             profile_id: profile.id,
             email: profile.emails[0].value
           },
-          name: profile.name.givenName + ' ' + profile.name.familyName
+          name:
+            profile.name.givenName +
+            ' ' +
+            profile.name.familyName
         });
         await newUser.save();
         return done(null, {

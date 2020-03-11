@@ -5,7 +5,7 @@ import { Contact } from './contactsModel';
 export class ContactsService {
   async createContact(
     ownerId: string,
-    contactInfo: iContact,
+    contactInfo: iContact
   ) {
     const existingUser = await User.findOne({
       _id: ownerId
@@ -49,8 +49,7 @@ export class ContactsService {
       updates,
       { new: true }
     );
-    if(updatedContact)
-    await updatedContact.save();
+    if (updatedContact) await updatedContact.save();
     return updatedContact;
   }
 

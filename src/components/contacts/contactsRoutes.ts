@@ -1,7 +1,6 @@
 import express from 'express';
 import { ContactsController } from './contactsController';
 import { catchErrors } from '../../errors/errorHandler';
-
 import { checkAuthentication } from '../../middlewares/checkAuthentication';
 import { checkAuthorization } from '../../middlewares/checkAuthorization';
 export const contactsRouter = express.Router();
@@ -49,7 +48,5 @@ contactsRouter
   );
 
 contactsRouter
-    .route('/exportToCsv/:ownerId')
-    .get(
-        catchErrors(contactsController.exportToCsv)
-    );
+  .route('/exportToCsv/:ownerId')
+  .get(catchErrors(contactsController.exportToCsv));

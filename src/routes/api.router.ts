@@ -1,10 +1,12 @@
 import express from 'express';
 import { iRoutes } from '../interfaces/iRoutes';
 const passportSetup = require('../components/auth/passport');
-import passport from 'passport';
 
 export class ApiRouter {
-  constructor(readonly router: express.Router, private routes: iRoutes[]) {
+  constructor(
+    readonly router: express.Router,
+    private routes: iRoutes[]
+  ) {
     this.router = router;
     this.routes = routes;
     this.setupApiRoutes(routes);
@@ -13,7 +15,6 @@ export class ApiRouter {
   get getApiRouter() {
     return this.router;
   }
-
 
   setupApiRoutes(routes: iRoutes[]) {
     routes.forEach((route: iRoutes) => {

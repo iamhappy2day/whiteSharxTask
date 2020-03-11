@@ -8,8 +8,6 @@ import { Contact } from './contactsModel';
 const contactService = new ContactsService();
 const json2csv = require('json2csv').parse;
 
-
-
 export class ContactsController {
   async getContactsByOwnerId(req: Request, res: Response) {
     //Pagination and sorting
@@ -133,14 +131,14 @@ export class ContactsController {
       ownerId: req.params.ownerId
     });
     const fields = ['name', 'company'];
-    const csv = json2csv(contactList, {fields: fields});
-    fs.writeFile('csv/importedContacts.csv', csv, (err) => {
-      if(err) throw err;
+    const csv = json2csv(contactList, { fields: fields });
+    fs.writeFile('csv/importedContacts.csv', csv, err => {
+      if (err) throw err;
     });
     res.status(200).send({
-      status: 'contacts where successfully converted to .csv',
+      status:
+        'contacts where successfully converted to .csv',
       contacts: csv
-    })
+    });
   }
 }
-

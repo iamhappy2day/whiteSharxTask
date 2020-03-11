@@ -1,5 +1,8 @@
-import passport from "passport";
+import passport from 'passport';
 
-export const checkAuthentication = passport.authenticate('jwt', {
+export const checkAuthentication = passport.authenticate(
+  'jwt',
+  {
     session: false
-});
+  }
+);
