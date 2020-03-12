@@ -4,7 +4,7 @@ import { iUser } from '../../interfaces/iUser';
 import * as jwt from 'jsonwebtoken';
 import { config } from '../../config';
 import { User } from '../users/usersModel';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 import { addAndUpdateUserValidation } from '../../validation';
 import { AuthService } from './authService';
 
@@ -77,7 +77,7 @@ export class AuthController {
         .send(userErrors.WRONG_EMAIL_ERROR.message);
     }
 
-    const validPass = await bcrypt.compare(
+    const validPass = await bcryptjs.compare(
       req.body.password,
       existingUser.password
     );
