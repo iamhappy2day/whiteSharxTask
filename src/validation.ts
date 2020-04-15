@@ -30,7 +30,41 @@ export const addAndUpdateUserValidation = (user: iUser) => {
     email: Joi.string()
       .email()
       .min(6),
-    password: Joi.string().min(3)
+    password: Joi.string()
+      .min(3)
+      .required(),
+    passwordConfirm: Joi.string()
+      .min(3)
+      .required()
+      .valid(Joi.ref('password'))
+      .error(new Error('Password and passwordConfirm are not equal'))
   });
   return schema.validate(user);
+};
+
+interface iReset {
+  token: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export const resetPasswordValidation = (
+  resetPasswordData: iReset
+) => {
+  const schema = Joi.object({
+    token: Joi.string(),
+    password: Joi.string()
+      .min(3)
+      .required(),
+    passwordConfirm: Joi.string()
+      .min(3)
+      .required()
+      .valid(Joi.ref('password'))
+      .error(
+        new Error(
+          'Password and confirmPassword are not equal'
+        )
+      )
+  });
+  return schema.validate(resetPasswordData);
 };

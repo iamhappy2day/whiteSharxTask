@@ -29,8 +29,16 @@ export const ContactSchema = new Schema({
   },
   ownerId: {
     type: String,
-    required: true
+    required: [true, 'contact must have an owner id']
   }
+});
+
+// ContactSchema.pre('save', function () {
+//   console.log(this)
+// });
+
+ContactSchema.pre('find', function () {
+  console.log('hello')
 });
 
 export const Contact = mongoose.model<iContact>(

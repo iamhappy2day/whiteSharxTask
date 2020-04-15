@@ -13,7 +13,7 @@ mongoose
   )
   .catch((error: Error) => {
     console.log(error.message);
-  });
+  })
 
 app.listen(config.PORT, () => {
   console.log('Server is running...');

@@ -13,6 +13,11 @@ declare const process: {
     AWS_ACCESS_KEY_ID: string;
     AWS_SECRET_ACCESS_KEY: string;
     AWS_REGION: string;
+    JWT_EXPIRES_IN: string;
+    EMAIL_USERNAME: string;
+    EMAIL_PASSWORD: string;
+    EMAIL_HOST: string;
+    EMAIL_PORT: string;
   };
 };
 
@@ -26,5 +31,10 @@ export const config = {
   JWT_SECRET: process.env.JWT_SECRET,
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  AWS_REGION: process.env.AWS_REGION
+  AWS_REGION: process.env.AWS_REGION,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
+  EMAIL_USERNAME: process.env.EMAIL_USERNAME,
+  EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+  EMAIL_HOST: process.env.EMAIL_HOST,
+  EMAIL_PORT: process.env.EMAIL_PORT
 };

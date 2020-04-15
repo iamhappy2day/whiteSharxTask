@@ -23,3 +23,15 @@ authRouter
 authRouter
   .route('/login')
   .post(catchErrors(authController.userLogin));
+
+authRouter
+    .route('/updatePassword')
+    .patch(catchErrors(authController.updatePassword));
+
+authRouter
+  .route('/forgotPassword')
+  .post(catchErrors(authController.forgetPassword));
+
+authRouter
+  .route('/resetPassword/:token')
+  .patch(catchErrors(authController.resetPassword));

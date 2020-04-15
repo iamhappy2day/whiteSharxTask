@@ -11,13 +11,13 @@ const upload = multer({ dest: 'csv/' });
 contactsRouter
   .route('/:ownerId')
   .get(
-    checkAuthentication,
-    checkAuthorization,
+    // checkAuthentication,
+    // checkAuthorization,
     catchErrors(contactsController.getContactsByOwnerId)
   )
   .post(
-    checkAuthentication,
-    checkAuthorization,
+    // checkAuthentication,
+    // checkAuthorization,
     catchErrors(contactsController.createContact)
   );
 
